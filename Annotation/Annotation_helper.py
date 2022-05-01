@@ -84,29 +84,48 @@ def read_or_make_csv(path, col_names=["Annotator", "transaction_indx", "permissi
         df = pd.DataFrame(columns=col_names)
     return df
 
-def Annotate_data(df1, df2, translation, output_file, Annotator_name="Bas"):
-    output = read_or_make_csv(output_file)
-    starting_indx = get_last_index(df1, output, "permission_indx")
-    print(starting_indx)
-    starting_indx = 99
-    df1 = df1.loc[starting_indx:]
-    for i, row in df1.iterrows():
-        df1_row = df1.iloc[i]
-        q = generate_query(df1_row, translation)
-        m = fuzzy_match(df2, q)
-        print("Query:")
-        display(HTML(pd.DataFrame(get_n_dict_value(q), index=[0]).to_html()))
-        print("Possible matches:")
-        display(HTML(m[get_n_dict_value(translation).values()].head(n=12).to_html()))
-        res = input("Index of most likely match: ").split(" ")
-        res_id = []
-        if res != ['']:
-            for el in res:
-                res_id = df2.loc[int(el)]["ID"]
-                res_df = pd.DataFrame(data={"Annotator":Annotator_name,"transaction_indx":res_id,"permission_indx":df1_row["ID"]}, index=[0])
-                output = pd.concat([output, res_df]).reset_index(drop=True)
-            output.to_csv(output_file)
-        clear_output(wait=True)
+class Annotator:
+    def __init__(self, df1, df2, translation, output_file, Annotator_name="Bas"):
+        self.df1 = df1
+        self.df2 = df2
+        self.translation = translation
+        self.output_file = output_file
+        self.output = read_or_make_csv(output_file)
+        self.annotator_name = Annotator_name
+        
+    def get_last_index(self, df, match_df, col_name):
+        try:
+            last_index = match_df.iloc[-1][col_name]
+            return match_df[col_name].values[-1]
+        except:
+            return 0
+        
+    def annotate(self):
+        starting_indx = self.get_last_index(self.df1, self.output, "permission_indx")
+        print(starting_indx)
+        df1 = self.df1.loc[starting_indx:]
+        for i, row in df1.iterrows():
+            df1_row = df1.loc[i]
+            q = generate_query(df1_row, self.translation)
+            m = fuzzy_match(self.df2, q)
+            print("Query:")
+            display(HTML(pd.DataFrame(get_n_dict_value(q), index=[0]).to_html()))
+            print("Possible matches:")
+            display(HTML(m[get_n_dict_value(self.translation).values()].head(n=12).to_html()))
+            res = input("Index of most likely match: ").split(" ")
+            res_id = []
+            if res != ['']:
+                for el in res:
+                    res_id = self.df2.loc[int(el)]["Entry-ID"]
+                    res_df = pd.DataFrame(data={"Annotator":self.annotator_name,"transaction_indx":res_id,"permission_indx":df1_row["Entry-ID"]}, index=[0])
+                    self.output = pd.concat([self.output, res_df]).reset_index(drop=True)
+            else:
+                    res_df = pd.DataFrame(data={"Annotator":self.annotator_name,"transaction_indx":"None","permission_indx":df1_row["Entry-ID"]}, index=[0])
+                    self.output = pd.concat([self.output, res_df]).reset_index(drop=True)
+
+            self.output.to_csv(self.output_file)
+            clear_output(wait=True)
+        
 
 
 

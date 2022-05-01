@@ -3,3 +3,15 @@ Annotation/__pycache__/Annotation_helper.cpython-38.pyc
 Annotation/.ipynb_checkpoints/Annotate_trans_perm-checkpoint.ipynb
 Annotation/.ipynb_checkpoints/Linkage-checkpoint.ipynb
 .ipynb_checkpoints/EDA-checkpoint.ipynb
+.ipynb_checkpoints/Dedupe-checkpoint.ipynb
+.ipynb_checkpoints/Matcher-checkpoint.ipynb
+.ipynb_checkpoints/Recordlinkage test-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Benchmarks (OLD)-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Benchmarks-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Calculate distances-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Figures-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Neural networks-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Ship search-checkpoint.ipynb
+*.csv
+*.json
+*.rar
