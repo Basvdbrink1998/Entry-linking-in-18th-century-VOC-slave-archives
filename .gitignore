@@ -15,3 +15,6 @@ Annotation/.ipynb_checkpoints/Ship search-checkpoint.ipynb
 *.csv
 *.json
 *.rar
+ EDA (OLD).ipynb
+.ipynb_checkpoints/ EDA (OLD)-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/EDA-checkpoint.ipynb
