@@ -11,6 +11,16 @@ from IPython.display import clear_output
 import time
 import math
 
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import balanced_accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import PrecisionRecallDisplay
+
+
 def preprocess(df):
     return df.dropna(how='all', axis=1).replace('[Leeg]', np.nan).replace('[leeg]', np.nan).replace('[…]', np.nan).replace('[...]', np.nan).dropna(how='all', axis=0)
 
@@ -126,6 +136,51 @@ class Annotator:
             self.output.to_csv(self.output_file)
             clear_output(wait=True)
         
+        
+def evaluate_prediction(pred, y_true, model_name="default_model", figure_folder="../Figures/"):
+    cm = confusion_matrix(y_true, pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
+    plt.savefig(f"{figure_folder}_{model_name}_Confusion_matrix.png")
+    plt.show()
+    print("recall score: ", recall_score(y_true, pred))
+    print("precision score: ", precision_score(y_true, pred))
+    print("f1 score: ", f1_score(y_true, pred))
+
+def fit_and_test_classifier(clf, X_train, X_test, y_train, y_test, model_name="default_model", figure_folder="../"):
+    clf = clf.fit(X_train, y_train)
+    pred = clf.predict(X_test)
+    
+    evaluate_prediction(pred, y_test, model_name, figure_folder)
+    
+    display = PrecisionRecallDisplay.from_estimator(
+        clf, X_test, y_test, name=model_name
+    )
+    _ = display.ax_.set_title("2-class Precision-Recall curve")
+    
+    plt.savefig(f"{figure_folder}_{model_name}_PR_curve.png")
+    return clf
+
+def plot_metrics(history):
+  metrics = ['loss', 'prc', 'precision', 'recall']
+  for n, metric in enumerate(metrics):
+    name = metric.replace("_"," ").capitalize()
+    plt.subplot(2,2,n+1)
+    plt.plot(history.epoch, history.history[metric], color=colors[0], label='Train')
+    plt.plot(history.epoch, history.history['val_'+metric],
+             color=colors[0], linestyle="--", label='Val')
+    plt.xlabel('Epoch')
+    plt.ylabel(name)
+    if metric == 'loss':
+      plt.ylim([0, plt.ylim()[1]])
+    elif metric == 'auc':
+      plt.ylim([0.8,1])
+    else:
+      plt.ylim([0,1])
+
+    plt.legend();
+
+
 
 
 
