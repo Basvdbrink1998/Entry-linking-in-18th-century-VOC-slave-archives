@@ -18,3 +18,19 @@ Annotation/.ipynb_checkpoints/Ship search-checkpoint.ipynb
  EDA (OLD).ipynb
 .ipynb_checkpoints/ EDA (OLD)-checkpoint.ipynb
 Annotation/.ipynb_checkpoints/EDA-checkpoint.ipynb
+*.npy
+*.model
+.ipynb_checkpoints/EDA (OLD)-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Blocking-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Embedding test-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Embedding-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Transformer test-checkpoint.ipynb
+Annotation/.ipynb_checkpoints/Untitled-checkpoint.ipynb
+Annotation/Embedding test.ipynb
+EDA (OLD).ipynb
+Dedupe.ipynb
+Annotation/Transformer test.ipynb
+Annotation/Ship search.ipynb
+Annotation/Untitled.ipynb
+Matcher.ipynb
+Recordlinkage test.ipynb
