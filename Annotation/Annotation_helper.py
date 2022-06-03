@@ -38,13 +38,17 @@ def drop_missing(df, cols):
     return pd.concat([df,df2]).drop_duplicates(keep=False)
 
 def load_transactions(path):
-    transactions = preprocess(pd.read_csv(path))
+    file = pd.read_csv(path)
+    file["Entry-ID"] = file.index
+    transactions = preprocess(file)
     transactions = drop_missing(transactions, ["SlaafNaamNieuw", "KoperVoornaam", "KoperAchternaam"])
     transactions = transactions.drop(columns=["Verkoop", "Inventarisnummer", "Scan", "Plaats"])
     return transactions
 
 def load_permissions(path):
-    permissions = preprocess(pd.read_csv(path))
+    file = pd.read_csv(path)
+    file["Entry-ID"] = file.index
+    permissions = preprocess(file)
     permissions = drop_missing(permissions, ["SlaafNaamNieuw", "BezitterVoornaam", "BezitterAchternaam"])
     return permissions
 
