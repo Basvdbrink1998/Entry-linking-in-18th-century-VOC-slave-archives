@@ -10,6 +10,7 @@ from IPython.display import display, HTML
 from IPython.display import clear_output
 import time
 import math
+import seaborn as sns
 
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import recall_score
@@ -20,16 +21,22 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import PrecisionRecallDisplay
 
-
 def preprocess(df):
-    return df.dropna(how='all', axis=1).replace('[Leeg]', np.nan).replace('[leeg]', np.nan).replace('[…]', np.nan).replace('[...]', np.nan).dropna(how='all', axis=0)
+    df = df.dropna(how='all', axis=1).replace('[Leeg]', np.nan).replace('[leeg]', np.nan).replace('[…]', np.nan).replace('[...]', np.nan).dropna(how='all', axis=0)
+    return preprocess_columns(df)
 
 def preprocess_column(col):
-    return col.str.lower()
+    try:
+        col = col.str.lower()
+        col = col.str.replace('[^a-zA-Z ]', '')
+        return col
+    except:
+        return col
 
 def preprocess_columns(df):
     for col in df.columns:
-        preprocess_column(df[col])
+        df[col] = preprocess_column(df[col])
+    return df
         
 def drop_missing(df, cols):
     df2 = df.copy()
@@ -99,13 +106,13 @@ def read_or_make_csv(path, col_names=["Annotator", "transaction_indx", "permissi
     return df
 
 class Annotator:
-    def __init__(self, df1, df2, translation, output_file, Annotator_name="Bas"):
+    def __init__(self, df1, df2, translation, output_file, annotator_name="Bas"):
         self.df1 = df1
         self.df2 = df2
         self.translation = translation
         self.output_file = output_file
         self.output = read_or_make_csv(output_file)
-        self.annotator_name = Annotator_name
+        self.annotator_name = annotator_name
         
     def get_last_index(self, df, match_df, col_name):
         try:
@@ -143,10 +150,15 @@ class Annotator:
         
 def evaluate_prediction(pred, y_true, model_name="default_model", figure_folder="../Figures/"):
     cm = confusion_matrix(y_true, pred)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp = sns.heatmap(cm, annot=True, cmap='Blues', yticklabels=["False", "True"], xticklabels=["False", "True"])
+    plt.xlabel('\nPredicted Values')
+    plt.ylabel('Actual Values ')
+#     plt.xticks(['False','True'])
+#     plt.yticks(['False','True'])
     disp.plot()
     plt.savefig(f"{figure_folder}_{model_name}_Confusion_matrix.png")
     plt.show()
+    
     print("recall score: ", recall_score(y_true, pred))
     print("precision score: ", precision_score(y_true, pred))
     print("f1 score: ", f1_score(y_true, pred))
