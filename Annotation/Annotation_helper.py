@@ -22,10 +22,12 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import PrecisionRecallDisplay
 
 def preprocess(df):
+    # Removes empty rows and replaces empty entries with NaN values
     df = df.dropna(how='all', axis=1).replace('[Leeg]', np.nan).replace('[leeg]', np.nan).replace('[…]', np.nan).replace('[...]', np.nan).dropna(how='all', axis=0)
     return preprocess_columns(df)
 
 def preprocess_column(col):
+    # Removes al non-alphabetic characters with the exception of the whitespaces in a column
     try:
         col = col.str.lower()
         col = col.str.replace('[^a-zA-Z ]', '')
@@ -34,6 +36,7 @@ def preprocess_column(col):
         return col
 
 def preprocess_columns(df):
+    # Preprocess all columns
     for col in df.columns:
         df[col] = preprocess_column(df[col])
     return df
@@ -45,6 +48,7 @@ def drop_missing(df, cols):
     return pd.concat([df,df2]).drop_duplicates(keep=False)
 
 def load_transactions(path):
+    # Loads transaction dataset
     file = pd.read_csv(path)
     file["Entry-ID"] = file.index
     transactions = preprocess(file)
@@ -53,6 +57,7 @@ def load_transactions(path):
     return transactions
 
 def load_permissions(path):
+    # Loads permission datset
     file = pd.read_csv(path)
     file["Entry-ID"] = file.index
     permissions = preprocess(file)
@@ -153,10 +158,9 @@ def evaluate_prediction(pred, y_true, model_name="default_model", figure_folder=
     disp = sns.heatmap(cm, annot=True, cmap='Blues', yticklabels=["False", "True"], xticklabels=["False", "True"])
     plt.xlabel('\nPredicted Values')
     plt.ylabel('Actual Values ')
-#     plt.xticks(['False','True'])
-#     plt.yticks(['False','True'])
     disp.plot()
-    plt.savefig(f"{figure_folder}_{model_name}_Confusion_matrix.png")
+    plt.tight_layout()
+    plt.savefig(f"{figure_folder}_{model_name}_Confusion_matrix.png", bbox_inches="tight")
     plt.show()
     
     print("recall score: ", recall_score(y_true, pred))
@@ -173,7 +177,7 @@ def fit_and_test_classifier(clf, X_train, X_test, y_train, y_test, model_name="d
         clf, X_test, y_test, name=model_name
     )
     _ = display.ax_.set_title("2-class Precision-Recall curve")
-    
+    plt.tight_layout()
     plt.savefig(f"{figure_folder}_{model_name}_PR_curve.png")
     return clf
 
