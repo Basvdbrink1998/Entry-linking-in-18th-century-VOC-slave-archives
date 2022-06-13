@@ -6,6 +6,8 @@ This repository contains code used during my masters thesis: Entry linking in 18
 ## Technologies used
 All code is written in Python 3.6
 
+Most code is written iside Python notebooks using Jupyter notebook
+
 All requirements can be found in requirements.txt
 
 ## Top-level directory layout
