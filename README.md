@@ -4,7 +4,7 @@
 This repository contains code used during my masters thesis: Entry linking in 18th century VOC slave archives.
 
 ## Technologies used
-All code is written in python
+All code is written in Python 3.6
 
 All requirements can be found in requirements.txt
 
