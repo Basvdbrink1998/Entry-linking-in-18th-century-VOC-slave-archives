@@ -153,19 +153,18 @@ class Annotator:
             clear_output(wait=True)
         
         
-def evaluate_prediction(pred, y_true, model_name="default_model", figure_folder="../Figures/"):
-    cm = confusion_matrix(y_true, pred)
-    disp = sns.heatmap(cm, annot=True, cmap='Blues', yticklabels=["False", "True"], xticklabels=["False", "True"])
-    plt.xlabel('\nPredicted Values')
-    plt.ylabel('Actual Values ')
-    disp.plot()
-    plt.tight_layout()
-    plt.savefig(f"{figure_folder}_{model_name}_Confusion_matrix.png", bbox_inches="tight")
-    plt.show()
+def evaluate_prediction(pred, y_true, model_name="default_model", figure_folder="../Figures/", plot=False):
+    if plot:
+        cm = confusion_matrix(y_true, pred)
+        disp = sns.heatmap(cm, annot=True, cmap='Blues', yticklabels=["False", "True"], xticklabels=["False", "True"])
+        plt.xlabel('\nPredicted Values')
+        plt.ylabel('Actual Values ')
+        disp.plot()
+        plt.tight_layout()
+        plt.savefig(f"{figure_folder}_{model_name}_Confusion_matrix.png", bbox_inches="tight")
+        plt.show()
     
-    print("recall score: ", recall_score(y_true, pred))
-    print("precision score: ", precision_score(y_true, pred))
-    print("f1 score: ", f1_score(y_true, pred))
+    return {"recall score: ": recall_score(y_true, pred), "precision score: ": precision_score(y_true, pred), "f1 score: ": f1_score(y_true, pred, zero_division=0)}
 
 def fit_and_test_classifier(clf, X_train, X_test, y_train, y_test, model_name="default_model", figure_folder="../"):
     clf = clf.fit(X_train, y_train)
