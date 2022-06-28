@@ -1,7 +1,7 @@
 # Record linkage in 18th century VOC slave archives
 
 ## General info
-This repository contains code used during my masters thesis: Entry linking in 18th century VOC slave archives.
+This repository contains code used during my masters thesis: Record linkage in 18th century VOC slave archives.
 
 ## Technologies used
 All code is written in Python 3.6
